@@ -1,4 +1,17 @@
 import streamlit as st
+#classes and scheduler
+class Task:
+    PRIORITY_MAP = {"high": 3, "medium": 2, "low": 1}
+
+    def __init__(self, title, duration_minutes, priority):
+        self.title = title
+        self.duration = duration_minutes
+        self.priority = priority
+        self.priority_score = Task.PRIORITY_MAP[priority]
+
+    def __repr__(self):
+        return f"{self.title} ({self.priority}, {self.duration} min)"
+
 
 st.set_page_config(page_title="PawPal+", page_icon="🐾", layout="centered")
 
