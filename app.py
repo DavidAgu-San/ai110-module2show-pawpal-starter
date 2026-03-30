@@ -1,5 +1,6 @@
 import streamlit as st
 #classes and scheduler
+
 class Task:
     PRIORITY_MAP = {"high": 3, "medium": 2, "low": 1}
 
@@ -12,6 +13,59 @@ class Task:
     def __repr__(self):
         return f"{self.title} ({self.priority}, {self.duration} min)"
 
+
+class Pet:
+    def __init__(self, name, species):
+        self.name = name
+        self.species = species
+
+
+class Owner:
+    def __init__(self, name):
+        self.name = name
+
+
+class Scheduler:
+    """
+    Simple rule-based scheduler:
+    - Sort tasks by priority (high → low)
+    - Break ties using shortest duration first
+    - Assign start times sequentially beginning at 8:00 AM
+    """
+
+    def build_schedule(self, tasks):
+        task_objs = [
+            Task(t["title"], t["duration_minutes"], t["priority"])
+            for t in tasks
+        ]
+
+        # Sort by priority desc, duration asc
+        task_objs.sort(key=lambda t: (-t.priority_score, t.duration))
+
+        schedule = []
+        current_time = 8 * 60  # Start at 8:00 AM
+
+        for t in task_objs:
+            start_hour = current_time // 60
+            start_min = current_time % 60
+            start_str = f"{start_hour:02d}:{start_min:02d}"
+
+            explanation = (
+                f"Chosen because it is **{t.priority} priority** "
+                f"and takes **{t.duration} minutes**."
+            )
+
+            schedule.append({
+                "task": t.title,
+                "start": start_str,
+                "duration": t.duration,
+                "priority": t.priority,
+                "why": explanation
+            })
+
+            current_time += t.duration
+
+        return schedule
 
 st.set_page_config(page_title="PawPal+", page_icon="🐾", layout="centered")
 
