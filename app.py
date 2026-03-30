@@ -141,15 +141,25 @@ st.subheader("Build Schedule")
 st.caption("This button should call your scheduling logic once you implement it.")
 
 if st.button("Generate schedule"):
-    st.warning(
-        "Not implemented yet. Next step: create your scheduling logic (classes/functions) and call it here."
-    )
-    st.markdown(
-        """
-Suggested approach:
-1. Design your UML (draft).
-2. Create class stubs (no logic).
-3. Implement scheduling behavior.
-4. Connect your scheduler here and display results.
-"""
-    )
+    if not st.session_state.tasks:
+        st.error("Add at least one task before generating a schedule.")
+    else:
+        owner = Owner(owner_name)
+        pet = Pet(pet_name, species)
+        scheduler = Scheduler()
+
+        schedule = scheduler.build_schedule(st.session_state.tasks)
+
+        st.success(f"Schedule for {owner.name} and {pet.name} 🐾")
+
+        for item in schedule:
+            st.markdown(
+                f"""
+                **{item['task']}**  
+                ⏰ Start: **{item['start']}**  
+                🕒 Duration: {item['duration']} minutes  
+                🔼 Priority: {item['priority']}  
+                💬 *{item['why']}*
+                """
+            )
+            st.divider()
